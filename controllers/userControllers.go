@@ -130,6 +130,40 @@ func Login(c *gin.Context) {
 
 }
 
+func GetUserProfile(c *gin.Context) {
+	userData, exists := c.Get("user")
+
+	if !exists {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "User not found",
+		})
+		return
+	}
+
+	user, ok := userData.(models.User)
+
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Unable to retrieve user data",
+		})
+		return
+	}
+
+	var userProfile models.User
+
+	err := config.DB.Preload("Poll").First(&userProfile, user.ID).Error
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"userData": userProfile,
+	})
+
+}
+
 func Validate(c *gin.Context) {
 	user, _ := c.Get("user")
 

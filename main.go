@@ -23,6 +23,7 @@ func main() {
 		apiV1.POST("/login", controllers.Login)
 		apiV1.GET("/validate", middlewares.CheckAuth, controllers.Validate)
 		apiV1.POST("/poll", middlewares.CheckAuth, controllers.CreatePoll)
+		apiV1.GET("/user/profile", middlewares.CheckAuth, controllers.GetUserProfile)
 	}
 
 	r.Run()
