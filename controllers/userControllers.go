@@ -164,6 +164,59 @@ func GetUserProfile(c *gin.Context) {
 
 }
 
+func UpdateProfile(c *gin.Context) { //update username or email
+
+	var Body struct {
+		Username string `json:"username" binding:"required"`
+		Email    string `json:"email" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&Body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request body or missing required fields",
+		})
+		return
+	}
+
+	userData, exists := c.Get("user")
+
+	if !exists {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "User not found",
+		})
+		return
+	}
+
+	user, ok := userData.(models.User)
+
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Unable to retrieve user data",
+		})
+		return
+	}
+
+	var userProfile models.User
+
+	if err := config.DB.First(&userProfile, user.ID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	userProfile.Username = Body.Username
+	userProfile.Email = Body.Email
+
+	if err := config.DB.Save(&userProfile).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Fail to update user info."})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User's info is updated successfully.",
+	})
+
+}
+
 func Validate(c *gin.Context) {
 	user, _ := c.Get("user")
 

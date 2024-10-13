@@ -92,3 +92,163 @@ func CreatePoll(c *gin.Context) {
 		"data": poll,
 	})
 }
+
+func DeletePollByID(c *gin.Context) {
+
+	pollId := c.Param("id")
+
+	if pollId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Missing Poll ID",
+		})
+		return
+	}
+
+	var deletePoll models.Poll
+
+	if err := config.DB.First(&deletePoll, pollId).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Poll not found",
+		})
+		return
+	}
+
+	if err := config.DB.Delete(&deletePoll).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to delete the poll",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Poll deleted successfully",
+		"poll":    deletePoll,
+	})
+}
+
+func UpdatePollByID(c *gin.Context) {
+	type OptionBody struct {
+		Title  string `json:"title"`
+		ImgUrl string `json:"img_url"`
+	}
+
+	type PollBody struct {
+		Title       string       `json:"title"`
+		Description string       `json:"description"`
+		ImgUrl      string       `json:"img_url"`
+		StartDate   string       `json:"start_date"`
+		EndDate     string       `json:"end_date"`
+		Status      bool         `json:"status"`
+		Public      bool         `json:"public"`
+		Options     []OptionBody `json:"options"`
+	}
+
+	var pollBody PollBody
+
+	// Parse JSON body
+	if err := c.ShouldBindJSON(&pollBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request body or missing required fields",
+		})
+		return
+	}
+
+	// Get user data
+	userData, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "User not found",
+		})
+		return
+	}
+
+	user, ok := userData.(models.User)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Unable to retrieve user data",
+		})
+		return
+	}
+
+	// Get poll ID
+	pollID := c.Param("id")
+	if pollID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Missing Poll ID",
+		})
+		return
+	}
+
+	// Find the poll
+	var poll models.Poll
+	if err := config.DB.Preload("Options").First(&poll, pollID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Poll not found",
+		})
+		return
+	}
+
+	// Check if the user is the owner of the poll
+	if poll.OwnerID != user.ID {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": "You are not authorized to update this poll",
+		})
+		return
+	}
+
+	// Update poll fields
+	poll.Title = pollBody.Title
+	poll.Description = pollBody.Description
+	poll.ImgUrl = pollBody.ImgUrl
+
+	startDate, err := time.Parse("2006-01-02", pollBody.StartDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid start date format",
+		})
+		return
+	}
+	endDate, err := time.Parse("2006-01-02", pollBody.EndDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid end date format",
+		})
+		return
+	}
+	poll.StartDate = startDate
+	poll.EndDate = endDate
+
+	poll.Status = pollBody.Status
+	poll.Public = pollBody.Public
+
+	// Clear existing options before updating
+	config.DB.Where("poll_id = ?", poll.ID).Delete(&models.Option{})
+
+	// Update poll options with the new ones from the request
+	var newOptions []models.Option
+	for _, updatedOption := range pollBody.Options {
+		newOption := models.Option{
+			Title:  updatedOption.Title,
+			ImgUrl: updatedOption.ImgUrl,
+			PollID: poll.ID,
+		}
+		newOptions = append(newOptions, newOption)
+	}
+
+	// Assign the new options to the poll
+	poll.Options = newOptions
+
+	// Save the updated poll with new options
+	if err := config.DB.Save(&poll).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to update poll",
+		})
+		return
+	}
+
+	// Success response
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Poll and options updated successfully",
+		"poll":    poll,
+	})
+}

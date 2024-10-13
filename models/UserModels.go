@@ -25,7 +25,7 @@ type Poll struct {
 	EndDate     time.Time `gorm:"not null"`
 	Status      bool      `gorm:"not null"`
 	Public      bool      `gorm:"not null"`
-	Options     []Option
+	Options     []Option  `gorm:"constraint:OnDelete:CASCADE"`
 }
 
 type Option struct {
@@ -34,8 +34,8 @@ type Option struct {
 	Poll       Poll   `gorm:"foreignKey:PollID"`
 	Title      string `gorm:"not null"`
 	ImgUrl     string
-	TotalVotes int `gorm:"default:0"`
-	Votes      []Vote
+	TotalVotes int    `gorm:"default:0"`
+	Votes      []Vote `gorm:"constraint:OnDelete:CASCADE"`
 }
 
 type Vote struct {

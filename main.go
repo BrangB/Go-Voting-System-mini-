@@ -24,6 +24,10 @@ func main() {
 		apiV1.GET("/validate", middlewares.CheckAuth, controllers.Validate)
 		apiV1.POST("/poll", middlewares.CheckAuth, controllers.CreatePoll)
 		apiV1.GET("/user/profile", middlewares.CheckAuth, controllers.GetUserProfile)
+		apiV1.PUT("/user/profile", middlewares.CheckAuth, controllers.UpdateProfile)
+
+		apiV1.PUT("/poll/:id", middlewares.CheckAuth, controllers.UpdatePollByID)
+		apiV1.DELETE("/poll/:id", middlewares.CheckAuth, controllers.DeletePollByID)
 	}
 
 	r.Run()
