@@ -21,6 +21,7 @@ func main() {
 		apiV1.GET("/ping", controllers.Ping)
 		apiV1.POST("/register", controllers.RegisterUser)
 		apiV1.POST("/login", controllers.Login)
+		apiV1.GET("/logout", controllers.Logout)
 		apiV1.GET("/validate", middlewares.CheckAuth, controllers.Validate)
 		apiV1.POST("/poll", middlewares.CheckAuth, controllers.CreatePoll)
 		apiV1.GET("/user/profile", middlewares.CheckAuth, controllers.GetUserProfile)

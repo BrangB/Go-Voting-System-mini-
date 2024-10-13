@@ -6,6 +6,7 @@ import (
 
 	"github.com/brangb/go_voting_system/config"
 	"github.com/brangb/go_voting_system/models"
+	"github.com/brangb/go_voting_system/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,10 +28,12 @@ func CreatePoll(c *gin.Context) {
 		Options     []OptionBody `json:"options"`
 	}
 
-	user, exists := c.Get("user")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Unauthorized",
+	// Validate & Get user data
+	user, valid := utils.UserUtils(c)
+
+	if !valid {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "User not found",
 		})
 		return
 	}
@@ -61,7 +64,7 @@ func CreatePoll(c *gin.Context) {
 	}
 
 	poll := models.Poll{
-		OwnerID:     user.(models.User).ID,
+		OwnerID:     user.ID,
 		Title:       pollBody.Title,
 		Description: pollBody.Description,
 		ImgUrl:      pollBody.ImgUrl,
@@ -153,19 +156,12 @@ func UpdatePollByID(c *gin.Context) {
 		return
 	}
 
-	// Get user data
-	userData, exists := c.Get("user")
-	if !exists {
+	// Validate & Get user data
+	user, valid := utils.UserUtils(c)
+
+	if !valid {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "User not found",
-		})
-		return
-	}
-
-	user, ok := userData.(models.User)
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Unable to retrieve user data",
 		})
 		return
 	}

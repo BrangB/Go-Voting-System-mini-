@@ -130,21 +130,25 @@ func Login(c *gin.Context) {
 
 }
 
-func GetUserProfile(c *gin.Context) {
-	userData, exists := c.Get("user")
+func Logout(c *gin.Context) {
 
-	if !exists {
+	// Remove Access Token, Refresh Token and user data
+	c.SetCookie("Access_Token", "", -1, "/", "", false, true)
+	c.SetCookie("Refresh_Token", "", -1, "/", "", false, true)
+	c.Set("user", nil)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logged out successfully",
+	})
+}
+
+func GetUserProfile(c *gin.Context) {
+
+	// Validate & Get user data
+	user, valid := utils.UserUtils(c)
+
+	if !valid {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "User not found",
-		})
-		return
-	}
-
-	user, ok := userData.(models.User)
-
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Unable to retrieve user data",
 		})
 		return
 	}
@@ -178,20 +182,12 @@ func UpdateProfile(c *gin.Context) { //update username or email
 		return
 	}
 
-	userData, exists := c.Get("user")
+	// Validate & Get user data
+	user, valid := utils.UserUtils(c)
 
-	if !exists {
+	if !valid {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "User not found",
-		})
-		return
-	}
-
-	user, ok := userData.(models.User)
-
-	if !ok {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Unable to retrieve user data",
 		})
 		return
 	}
