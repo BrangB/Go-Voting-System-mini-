@@ -96,6 +96,54 @@ func CreatePoll(c *gin.Context) {
 	})
 }
 
+func GetAllPolls(c *gin.Context) {
+
+	user, valid := utils.UserUtils(c)
+
+	if !valid {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "User not found",
+		})
+		return
+	}
+
+	var polls []models.Poll
+	result := config.DB.Where("owner_id = ?", user.ID).Preload("Options").Find(&polls)
+
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to retrieve polls",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"polls": polls,
+	})
+
+}
+
+func GetPollById(c *gin.Context) {
+
+	pollID := c.Param("id")
+
+	var poll models.Poll
+
+	config.DB.Preload("Options").First(&poll, pollID)
+
+	if poll.ID == 0 {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "There is no poll",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"poll": poll,
+	})
+
+}
+
 func DeletePollByID(c *gin.Context) {
 
 	pollId := c.Param("id")
@@ -148,7 +196,6 @@ func UpdatePollByID(c *gin.Context) {
 
 	var pollBody PollBody
 
-	// Parse JSON body
 	if err := c.ShouldBindJSON(&pollBody); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid request body or missing required fields",
@@ -175,7 +222,6 @@ func UpdatePollByID(c *gin.Context) {
 		return
 	}
 
-	// Find the poll
 	var poll models.Poll
 	if err := config.DB.Preload("Options").First(&poll, pollID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
@@ -184,7 +230,6 @@ func UpdatePollByID(c *gin.Context) {
 		return
 	}
 
-	// Check if the user is the owner of the poll
 	if poll.OwnerID != user.ID {
 		c.JSON(http.StatusForbidden, gin.H{
 			"error": "You are not authorized to update this poll",
@@ -192,7 +237,6 @@ func UpdatePollByID(c *gin.Context) {
 		return
 	}
 
-	// Update poll fields
 	poll.Title = pollBody.Title
 	poll.Description = pollBody.Description
 	poll.ImgUrl = pollBody.ImgUrl
@@ -217,10 +261,8 @@ func UpdatePollByID(c *gin.Context) {
 	poll.Status = pollBody.Status
 	poll.Public = pollBody.Public
 
-	// Clear existing options before updating
 	config.DB.Where("poll_id = ?", poll.ID).Delete(&models.Option{})
 
-	// Update poll options with the new ones from the request
 	var newOptions []models.Option
 	for _, updatedOption := range pollBody.Options {
 		newOption := models.Option{
@@ -231,10 +273,8 @@ func UpdatePollByID(c *gin.Context) {
 		newOptions = append(newOptions, newOption)
 	}
 
-	// Assign the new options to the poll
 	poll.Options = newOptions
 
-	// Save the updated poll with new options
 	if err := config.DB.Save(&poll).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to update poll",
@@ -242,7 +282,6 @@ func UpdatePollByID(c *gin.Context) {
 		return
 	}
 
-	// Success response
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Poll and options updated successfully",
 		"poll":    poll,
