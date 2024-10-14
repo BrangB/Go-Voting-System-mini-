@@ -1,0 +1,248 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Go_VotingSystem",
+    "collectionId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+    "dateExported": "2024-10-14T08:59:25.060Z",
+    "version": "1.2",
+    "folders": [
+        {
+            "_id": "a00a6117-fe36-4424-9707-c1b0a9d2306a",
+            "name": "Poll - CRUD",
+            "containerId": "",
+            "created": "2024-10-13T16:39:26.662Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "f5e50aa5-4298-4c23-99ef-77d5f399df9d",
+            "name": "User - CRUD",
+            "containerId": "",
+            "created": "2024-10-13T16:40:49.549Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "b8a64daf-4c1f-4450-a4d5-0cf5a8c6bf70",
+            "name": "Vote - CRUD",
+            "containerId": "",
+            "created": "2024-10-13T16:55:52.210Z",
+            "sortNum": 30000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "30bc2b72-7688-46f2-ace3-e1c8e38ac2b9",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "f5e50aa5-4298-4c23-99ef-77d5f399df9d",
+            "name": "Register Account",
+            "url": "http://localhost:4000/api/v1/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-10-07T10:45:23.147Z",
+            "modified": "2024-10-07T16:46:09.634Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\" : \"Di Di\",\n  \"email\": \"didi@gmail.com\",\n  \"password\": \"brang123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "586b93b6-c079-4a46-b1f0-b1213731fa30",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "a00a6117-fe36-4424-9707-c1b0a9d2306a",
+            "name": "Create Voting Room (Poll)",
+            "url": "http://localhost:4000/api/v1/poll",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-10-08T18:49:11.182Z",
+            "modified": "2024-10-08T18:50:33.391Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"title\": \"Favorite Programming Language\",\n    \"description\": \"Vote for your favorite programming language!\",\n    \"img_url\": \"http://example.com/poll_image.jpg\",\n    \"start_date\": \"2024-10-01T10:00:00Z\",\n    \"end_date\": \"2024-10-15T10:00:00Z\",\n    \"status\": true,\n    \"public\": true,\n    \"options\": [\n        {\n            \"title\": \"Go\",\n            \"img_url\": \"http://example.com/go.jpg\"\n        },\n        {\n            \"title\": \"Python\",\n            \"img_url\": \"http://example.com/python.jpg\"\n        },\n        {\n            \"title\": \"JavaScript\",\n            \"img_url\": \"http://example.com/javascript.jpg\"\n        },\n        {\n            \"title\": \"Rust\",\n            \"img_url\": \"http://example.com/rust.jpg\"\n        }\n    ]\n}\n",
+                "form": []
+            }
+        },
+        {
+            "_id": "921884b6-61a6-409e-80ba-1df81f569f81",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "f5e50aa5-4298-4c23-99ef-77d5f399df9d",
+            "name": "Login",
+            "url": "http://localhost:4000/api/v1/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-10-07T16:46:20.967Z",
+            "modified": "2024-10-12T06:31:24.808Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"didi@gmail.com\",\n  \"password\": \"brang123\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "f7db3921-5422-4d89-b4f0-ed5317808024",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "a00a6117-fe36-4424-9707-c1b0a9d2306a",
+            "name": "Delete Poll",
+            "url": "http://localhost:4000/api/v1/poll/1",
+            "method": "DELETE",
+            "sortNum": 20000,
+            "created": "2024-10-10T15:07:08.511Z",
+            "modified": "2024-10-10T15:18:00.234Z",
+            "headers": []
+        },
+        {
+            "_id": "c7ed6f2c-e844-443b-bc58-303c00fde045",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "f5e50aa5-4298-4c23-99ef-77d5f399df9d",
+            "name": "User Profile",
+            "url": "http://localhost:4000/api/v1/user/profile",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-10-10T09:00:26.528Z",
+            "modified": "2024-10-10T09:00:41.025Z",
+            "headers": []
+        },
+        {
+            "_id": "42a6f564-3578-4f18-b426-33d89f1bd081",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "a00a6117-fe36-4424-9707-c1b0a9d2306a",
+            "name": "Update Poll",
+            "url": "http://localhost:4000/api/v1/poll/1",
+            "method": "PUT",
+            "sortNum": 30000,
+            "created": "2024-10-12T06:23:09.327Z",
+            "modified": "2024-10-12T06:50:20.677Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Updated Poll Title\",\n  \"description\": \"This is the updated description of the poll.\",\n  \"img_url\": \"https://example.com/updated-image.jpg\",\n  \"start_date\": \"2024-10-12\",\n  \"end_date\": \"2024-10-20\",\n  \"status\": true,\n  \"public\": true,\n  \"options\": [\n    {\n      \"title\": \"Option 1\",\n      \"img_url\": \"https://example.com/option1.jpg\"\n    },\n    {\n      \"title\": \"Option 2\",\n      \"img_url\": \"https://example.com/option2.jpg\"\n    },\n    {\n      \"title\": \"Option 3\",\n      \"img_url\": \"https://example.com/option3.jpg\"\n    }\n  ]\n}\n",
+                "form": []
+            }
+        },
+        {
+            "_id": "cd3721e4-dc08-4eaf-bb57-dafd3bc0a44e",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "f5e50aa5-4298-4c23-99ef-77d5f399df9d",
+            "name": "Update user's info",
+            "url": "http://localhost:4000/api/v1/user/profile",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2024-10-10T14:49:05.301Z",
+            "modified": "2024-10-10T14:50:38.250Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"Brang Tsawm Aung\",\n  \"email\": \"brangtsawmaung@gmail.com\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "17cf92b1-0460-4ae8-9318-d3fe7e209a8c",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "a00a6117-fe36-4424-9707-c1b0a9d2306a",
+            "name": "Get all polls",
+            "url": "http://localhost:4000/api/v1/polls",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-10-13T16:28:58.309Z",
+            "modified": "2024-10-13T16:29:10.069Z",
+            "headers": []
+        },
+        {
+            "_id": "da994cb7-2cde-4840-840b-ae9cfcb9ddc0",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "f5e50aa5-4298-4c23-99ef-77d5f399df9d",
+            "name": "Logout",
+            "url": "http://localhost:4000/api/v1/logout",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2024-10-13T04:23:00.902Z",
+            "modified": "2024-10-13T04:23:23.435Z",
+            "headers": []
+        },
+        {
+            "_id": "210d14e2-11a8-4558-aa28-f5888321cd28",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "f5e50aa5-4298-4c23-99ef-77d5f399df9d",
+            "name": "Validate Auth",
+            "url": "http://localhost:4000/api/v1/validate",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2024-10-08T11:06:43.926Z",
+            "modified": "2024-10-08T11:07:00.620Z",
+            "headers": []
+        },
+        {
+            "_id": "5469b60a-bbea-4acb-9619-3dbf556a51b3",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "a00a6117-fe36-4424-9707-c1b0a9d2306a",
+            "name": "Get poll by id",
+            "url": "http://localhost:4000/api/v1/poll/1",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2024-10-13T16:41:16.005Z",
+            "modified": "2024-10-14T06:19:57.129Z",
+            "headers": []
+        },
+        {
+            "_id": "27ea0b94-e31f-46cf-95df-6d0cabd12598",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "b8a64daf-4c1f-4450-a4d5-0cf5a8c6bf70",
+            "name": "Get Total Voting Result",
+            "url": "http://localhost:4000/api/v1/poll/2/result",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2024-10-13T16:56:14.195Z",
+            "modified": "2024-10-14T06:39:31.631Z",
+            "headers": []
+        },
+        {
+            "_id": "1fb8d6ff-eeda-45f2-819c-e4450b3e641d",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "b8a64daf-4c1f-4450-a4d5-0cf5a8c6bf70",
+            "name": "Vote an option",
+            "url": "http://localhost:4000/api/v1/vote/5",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2024-10-13T17:18:33.970Z",
+            "modified": "2024-10-14T06:40:17.349Z",
+            "headers": [],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [
+                    {
+                        "name": "comment",
+                        "value": "Hello, I'm Brang"
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "bd8accc5-d103-4fcc-a040-99648ae4d5d9",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "b8a64daf-4c1f-4450-a4d5-0cf5a8c6bf70",
+            "name": "Get Vote by option id",
+            "url": "http://localhost:4000/api/v1/votes/option/5",
+            "method": "GET",
+            "sortNum": 100000,
+            "created": "2024-10-13T17:36:06.659Z",
+            "modified": "2024-10-14T06:39:55.326Z",
+            "headers": []
+        },
+        {
+            "_id": "a7ace23d-8e3e-4841-8798-5fa0fa4d2e4c",
+            "colId": "40a8ac84-c92a-4bfc-b688-abc6a15355bf",
+            "containerId": "b8a64daf-4c1f-4450-a4d5-0cf5a8c6bf70",
+            "name": "Remove Vote",
+            "url": "http://localhost:4000/api/v1/vote/3",
+            "method": "DELETE",
+            "sortNum": 110000,
+            "created": "2024-10-14T06:30:41.352Z",
+            "modified": "2024-10-14T06:45:09.620Z",
+            "headers": []
+        }
+    ],
+    "ref": "dcJiGC9tvCVkrLdZq_Ij2GKPcs0HH7JtKRGE2KfS8tWkQMLOm6yBf1NtscrScXX3bizWykxD6LAij2Vj-4hCpw"
+}
