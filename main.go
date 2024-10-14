@@ -41,6 +41,7 @@ func main() {
 		//vote
 		apiV1.GET("/vote/:id", middlewares.CheckAuth, controllers.VoteOption)
 		apiV1.GET("/votes/option/:option_id", middlewares.CheckAuth, controllers.GetAllVotesByOptionId)
+		apiV1.DELETE("/vote/:vote_id", middlewares.CheckAuth, controllers.RemoveVote)
 
 	}
 

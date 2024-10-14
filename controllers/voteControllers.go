@@ -76,6 +76,51 @@ func VoteOption(c *gin.Context) {
 	})
 }
 
+func RemoveVote(c *gin.Context) {
+
+	voteId := c.Param("vote_id")
+
+	var deleteVote models.Vote
+
+	if err := config.DB.First(&deleteVote, voteId).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Vote not found",
+		})
+		return
+	}
+
+	if err := config.DB.Delete(&deleteVote).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to delete the vote",
+		})
+		return
+	}
+
+	var option models.Option
+
+	if err := config.DB.First(&option, deleteVote.OptionID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Option not found",
+		})
+		return
+	}
+
+	option.TotalVotes -= 1
+
+	if err := config.DB.Save(&option).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to update vote count",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Vote removed successfully",
+		"vote":    deleteVote,
+	})
+
+}
+
 func GetAllVotesByOptionId(c *gin.Context) {
 
 	optionId := c.Param("option_id")

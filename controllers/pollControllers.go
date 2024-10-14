@@ -171,6 +171,8 @@ func DeletePollByID(c *gin.Context) {
 		return
 	}
 
+	config.DB.Where("poll_id = ?", pollId).Delete(&models.Option{})
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Poll deleted successfully",
 		"poll":    deletePoll,
