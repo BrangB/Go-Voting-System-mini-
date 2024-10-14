@@ -18,7 +18,6 @@ func main() {
 
 	apiV1 := r.Group("/api/v1")
 	{
-		apiV1.GET("/ping", controllers.Ping)
 
 		//user --  CRUD
 		apiV1.POST("/register", controllers.RegisterUser)
